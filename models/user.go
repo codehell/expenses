@@ -8,7 +8,7 @@ import (
 type User struct {
 	Id int64 `json:"id"`
 	Email string `json:"email"`
-	Password string `json:"password"`
+	Password string `json:"-,omitempty"`
 	Model
 }
 
@@ -24,6 +24,14 @@ func (u *User) BeforeInsert(db orm.DB) error {
 
 func (u *User) StoreUser() error {
 	err := db.Insert(u)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u User) GetUser() error {
+	err := db.Select(u)
 	if err != nil {
 		return err
 	}

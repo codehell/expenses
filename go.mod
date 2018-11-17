@@ -1,4 +1,4 @@
-module expenses
+module github.com/codehell/expenses
 
 require (
 	github.com/go-chi/chi v3.3.3+incompatible

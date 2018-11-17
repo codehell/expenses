@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/codehell/expenses/controllers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
-	"invernalia/controllers"
 	"net/http"
 )
 
@@ -29,6 +29,7 @@ func main() {
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 
 	r.Post("/auth/register", controllers.RegisterUser)
+	r.Get("/auth/register", controllers.LoginUser)
 
 	http.ListenAndServe(":3000", r)
 }
