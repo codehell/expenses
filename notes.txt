@@ -1,0 +1,3 @@
+loc, _ := time.LoadLocation("Europe/Madrid")
+fecha := user.CreatedAt
+fmt.Println(user, fecha.In(loc))
