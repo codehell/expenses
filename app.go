@@ -29,7 +29,7 @@ func main() {
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 
 	r.Post("/auth/register", controllers.RegisterUser)
-	r.Get("/auth/register", controllers.LoginUser)
+	r.Get("/auth/login", controllers.LoginUser)
 
 	http.ListenAndServe(":3000", r)
 }

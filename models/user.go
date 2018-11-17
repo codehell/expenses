@@ -8,7 +8,7 @@ import (
 type User struct {
 	Id int64 `json:"id"`
 	Email string `json:"email"`
-	Password string `json:"-,omitempty"`
+	Password string `json:"password"`
 	Model
 }
 
@@ -30,8 +30,8 @@ func (u *User) StoreUser() error {
 	return nil
 }
 
-func (u User) GetUser() error {
-	err := db.Select(u)
+func (u *User) GetUserByEmail() error {
+	err := db.Model(u).Where("email = ?", u.Email).Select()
 	if err != nil {
 		return err
 	}

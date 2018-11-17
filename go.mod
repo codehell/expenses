@@ -1,8 +1,10 @@
 module github.com/codehell/expenses
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v3.3.3+incompatible
 	github.com/go-chi/cors v1.0.0
+	github.com/go-chi/jwtauth v3.3.0+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-pg/migrations v6.3.0+incompatible
 	github.com/go-pg/pg v6.15.1+incompatible

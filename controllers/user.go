@@ -2,11 +2,15 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/codehell/expenses/models"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/go-chi/jwtauth"
 	"github.com/go-pg/pg"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
@@ -24,21 +28,36 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	} else if ok {
 		http.Error(w, "Error: Can't register user", http.StatusInternalServerError)
 		log.Fatal(err)
+	} else {
+		w.WriteHeader(http.StatusCreated)
 	}
-	w.WriteHeader(http.StatusCreated)
 }
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	email, password, ok := r.BasicAuth()
 	if !ok {
 		http.Error(w, "Error: Can't process data", http.StatusUnprocessableEntity)
+		return
 	}
 	user := models.User{Email: email}
-	user.GetUser()
+	user.GetUserByEmail()
 	hashed := []byte(user.Password)
 	err := bcrypt.CompareHashAndPassword(hashed, []byte(password))
 	if err != nil {
-		http.Error(w, "Error: Incorrect user or password", http.StatusUnprocessableEntity)
+		http.Error(w, "Error: Incorrect user or password", http.StatusUnauthorized)
+		return
 	}
-	w.WriteHeader(http.StatusOK)
+	tokenAuth := jwtauth.New("HS256", []byte("secret"), nil)
+	mapClaims := jwt.MapClaims{
+		"user_id": user.Email,
+		"iat": time.Now().Unix(),
+		"exp": time.Now().Add(time.Hour * 48).Unix(),
+	}
+	_, tokenString, err := tokenAuth.Encode(jwtauth.Claims(mapClaims))
+	if err != nil {
+		http.Error(w, "Error: Incorrect user or password", http.StatusInternalServerError)
+		log.Fatal("Error: Can't generate token")
+		return
+	}
+	fmt.Fprint(w, tokenString)
 }
