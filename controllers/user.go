@@ -49,7 +49,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	tokenAuth := jwtauth.New("HS256", []byte("secret"), nil)
 	mapClaims := jwt.MapClaims{
-		"user_id": user.Email,
+		"email": user.Email,
 		"iat": time.Now().Unix(),
 		"exp": time.Now().Add(time.Hour * 48).Unix(),
 	}
