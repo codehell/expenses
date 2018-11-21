@@ -1,8 +1,7 @@
-CREATE TABLE expenses (
+CREATE TABLE tags (
   id serial primary key,
   user_id integer references users(id),
-  amount decimal(14,2),
-  description varchar(255),
+  name varchar(100),
   created_at timestamp,
   updated_at timestamp
-)
+);

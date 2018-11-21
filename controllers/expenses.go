@@ -15,8 +15,10 @@ func ListExpenses(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	email := fmt.Sprintf("%v", claims["email"])
+
 	user := &models.User{
 		Email: email,
+		Expenses: []*models.Expense{},
 	}
 	err = user.GetUserByEmail()
 	if err != nil {
