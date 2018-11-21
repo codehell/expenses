@@ -37,6 +37,7 @@ func Routes() http.Handler {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 		r.Get("/", controllers.ListExpenses)
+		r.Post("/", controllers.StoreExpense)
 		r.Route("/{expenseID}", func(r chi.Router) {
 			r.Get("/", controllers.GetExpense)
 		})
