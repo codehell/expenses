@@ -14,7 +14,7 @@ type User struct {
 }
 
 func (u *User) BeforeInsert(db orm.DB) error {
-	u.Model.BeforeInsert(db)
+	_ = u.Model.BeforeInsert(db)
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err

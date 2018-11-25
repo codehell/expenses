@@ -17,7 +17,7 @@ func ListExpenses(w http.ResponseWriter, r *http.Request) {
 	email := fmt.Sprintf("%v", claims["email"])
 
 	user := &models.User{
-		Email: email,
+		Email:    email,
 		Expenses: []*models.Expense{},
 	}
 	err = user.GetUserByEmail()
@@ -34,11 +34,11 @@ func ListExpenses(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.Write(userJson)
+	_, _ = w.Write(userJson)
 }
 
 func GetExpense(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Gasto requerido"))
+	_, _ = w.Write([]byte("Gasto requerido"))
 }
 
 func StoreExpense(w http.ResponseWriter, r *http.Request) {

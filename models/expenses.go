@@ -9,6 +9,7 @@ type Expense struct {
 	UserId int64 `json:"user_id"`
 	Amount decimal.Decimal `json:"amount"`
 	Description string `json:"description"`
+	Tags []Tag `json:"tags" pg:"many2many:expense_tag"`
 	Model
 }
 
