@@ -30,7 +30,7 @@ func Routes() http.Handler {
 	r.Use(middleware.URLFormat)
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 
-	r.Post("/auth/register", controllers.RegisterUser)
+	// r.Post("/auth/register", controllers.RegisterUser)
 	r.Get("/auth/login", controllers.LoginUser)
 
 	r.Route("/expenses",func(r chi.Router) {

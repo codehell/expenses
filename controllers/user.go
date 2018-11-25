@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/codehell/expenses/models"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-pg/pg"
 	"golang.org/x/crypto/bcrypt"
@@ -13,23 +13,26 @@ import (
 	"time"
 )
 
-func RegisterUser(w http.ResponseWriter, r *http.Request) {
+func RegisterUser(c *gin.Context) {
 	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, "Error: Can't process data", http.StatusUnprocessableEntity)
-		log.Fatal(err)
-	}
+	err := c.BindJSON(&user)
 	err = user.StoreUser()
 	pgErr, ok := err.(pg.Error)
 	if ok && pgErr.IntegrityViolation() {
-		http.Error(w, "Error: User already exist", http.StatusConflict)
+		c.JSON(http.StatusConflict, gin.H{
+			"status": http.StatusConflict,
+			"error": "User already exist",
+		})
 	} else if ok {
-		http.Error(w, "Error: Can't register user", http.StatusInternalServerError)
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": http.StatusInternalServerError,
+			"error": "Can't register user",
+		})
 	} else {
-		w.WriteHeader(http.StatusCreated)
+		c.JSON(http.StatusCreated, gin.H{
+			"status": http.StatusCreated,
+			"message": "The user was registered",
+		})
 	}
 }
 
