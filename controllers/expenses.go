@@ -1,75 +1,50 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/codehell/expenses/models"
-	"github.com/go-chi/jwtauth"
+	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
-func ListExpenses(w http.ResponseWriter, r *http.Request) {
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	email := fmt.Sprintf("%v", claims["email"])
-
-	user := &models.User{
-		Email:    email,
-		Expenses: []*models.Expense{},
-	}
-	err = user.GetUserByEmail()
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-	}
-	err = user.GetUserExpenses()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-	user.Password = ""
-	userJson, err := json.Marshal(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	_, _ = w.Write(userJson)
+func GetExpense(c *gin.Context) {
 }
 
-func GetExpense(w http.ResponseWriter, r *http.Request) {
-	_, _ = w.Write([]byte("Gasto requerido"))
-}
-
-func StoreExpense(w http.ResponseWriter, r *http.Request) {
+func StoreExpense(c *gin.Context) {
 	var expense models.Expense
-	user, err := getUserFromClaims(r)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+	user, ok := getUserFromClaims(c)
+	if !ok {
 		return
 	}
-	err = json.NewDecoder(r.Body).Decode(&expense)
+	log.Println(user)
+	err := c.ShouldBindJSON(&expense)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		log.Println(err)
 	}
 	expense.UserId = user.Id
 	err = expense.StoreExpense()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err)
+		c.Status(http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
+	c.Status(http.StatusCreated)
 }
 
-func getUserFromClaims(r *http.Request) (models.User, error) {
-	var user models.User
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		return user, err
+
+func ListExpenses(c *gin.Context) {
+	user, ok := getUserFromClaims(c)
+	if !ok {
+		return
 	}
-	email := fmt.Sprintf("%v", claims["email"])
-	user.Email = email
-	err = user.GetUserByEmail()
-	return user, nil
+	err := user.GetUserByEmail()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+	err = user.GetUserExpenses()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+	user.Password = ""
+	c.JSON(http.StatusOK, user)
 }

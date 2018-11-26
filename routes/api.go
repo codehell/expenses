@@ -1,16 +1,6 @@
 package routes
 
-import (
-	"github.com/codehell/expenses/controllers"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/go-chi/cors"
-	"github.com/go-chi/jwtauth"
-	"github.com/go-chi/render"
-	"net/http"
-)
-
-func Routes() http.Handler {
+/*func Routes() http.Handler {
 	tokenAuth := jwtauth.New("HS256", []byte("secret"), nil)
 	r := chi.NewRouter()
 	cors := cors.New(cors.Options{
@@ -31,7 +21,7 @@ func Routes() http.Handler {
 	r.Use(render.SetContentType(render.ContentTypeJSON))
 
 	// r.Post("/auth/register", controllers.RegisterUser)
-	r.Get("/auth/login", controllers.LoginUser)
+	//r.Get("/auth/login", controllers.LoginUser)
 
 	r.Route("/expenses",func(r chi.Router) {
 		r.Use(jwtauth.Verifier(tokenAuth))
@@ -43,4 +33,4 @@ func Routes() http.Handler {
 		})
 	})
 	return r
-}
+}*/

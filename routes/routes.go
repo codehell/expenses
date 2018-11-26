@@ -1,22 +1,37 @@
 package routes
 
 import (
+	"log"
+	"time"
+
 	"github.com/codehell/expenses/controllers"
+	"github.com/codehell/expenses/middlewares"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 func Router() *gin.Engine {
 	r := gin.Default()
-	r.Use(cors.New(cors.Config{
-		AllowAllOrigins: true,
+	cors := cors.New(cors.Config{
+		AllowAllOrigins:  true,
 		AllowMethods:     []string{"POST", "PUT", "PATCH"},
 		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge: 12 * time.Hour,
-	}))
+		MaxAge:           12 * time.Hour,
+	})
+	r.Use(cors)
+	authMiddleware, err := middlewares.JwtMiddleware()
+	if err != nil {
+		log.Fatal("JWT Error:" + err.Error())
+	}
 	r.POST("/auth/register", controllers.RegisterUser)
+	r.POST("/auth/login", authMiddleware.LoginHandler)
+	auth := r.Group("/expenses")
+	auth.Use(authMiddleware.MiddlewareFunc())
+	{
+		auth.GET("", controllers.ListExpenses)
+		auth.POST("", controllers.StoreExpense)
+	}
 	return r
 }
