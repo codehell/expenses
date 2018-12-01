@@ -14,10 +14,10 @@ func Router() *gin.Engine {
 	r := gin.Default()
 	cors := cors.New(cors.Config{
 		AllowAllOrigins:  true,
-		AllowMethods:     []string{"POST", "PUT", "PATCH"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
 		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
+		// ExposeHeaders:    []string{"Content-Length"},
+		// AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	})
 	r.Use(cors)
@@ -27,11 +27,16 @@ func Router() *gin.Engine {
 	}
 	r.POST("/auth/register", controllers.RegisterUser)
 	r.POST("/auth/login", authMiddleware.LoginHandler)
-	auth := r.Group("/expenses")
+	auth := r.Group("")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("", controllers.ListExpenses)
-		auth.POST("", controllers.StoreExpense)
+		exp := auth.Group("expenses")
+		exp.GET("", controllers.ListExpenses)
+		exp.POST("", controllers.StoreExpense)
+		exp.DELETE("", controllers.DeleteExpense)
+		tag := auth.Group("tags")
+		tag.POST("", controllers.StoreTag)
 	}
+
 	return r
 }

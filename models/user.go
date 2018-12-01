@@ -6,10 +6,11 @@ import (
 )
 
 type User struct {
-	Id       int64      `json:"id"`
+	Id       int      `json:"id"`
 	Email    string     `json:"email"`
 	Password string     `json:"password,omitempty"`
 	Expenses []*Expense `json:"expenses"`
+	Tags     []*Tag     `json:"tags"`
 	Model
 }
 
@@ -42,7 +43,7 @@ func (u *User) GetUserByEmail() error {
 func (u *User) GetUserExpenses() error {
 	err := db.Model(u).
 		Where("id = ?", u.Id).
-		Column("user.*", "Expenses").
+		Column("user.*", "Expenses", "Tags", "Expenses.Tags", "Tags.Expenses").
 		First()
 	if err != nil {
 		return err
