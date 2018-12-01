@@ -12,7 +12,14 @@ import (
 
 func Router() *gin.Engine {
 	r := gin.Default()
-	cors := cors.New(cors.Config{
+	r.LoadHTMLGlob("./frontend/dist/*.html")
+	r.Static("/css", "./frontend/dist/css")
+	r.Static("/js", "./frontend/dist/js")
+	r.Static("/img", "./frontend/dist/img")
+	r.NoRoute(func(c *gin.Context) {
+		c.File("./frontend/dist/index.html")
+	})
+	corsObject := cors.New(cors.Config{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
 		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -20,7 +27,7 @@ func Router() *gin.Engine {
 		// AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	})
-	r.Use(cors)
+	r.Use(corsObject)
 	authMiddleware, err := middlewares.JwtMiddleware()
 	if err != nil {
 		log.Fatal("JWT Error:" + err.Error())

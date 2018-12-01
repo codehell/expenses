@@ -173,8 +173,7 @@ export default class Expenses extends Vue {
               })
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.error = this.$t('errors.undefined') as string
         })
     }

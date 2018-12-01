@@ -3,6 +3,7 @@ package middlewares
 import (
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/appleboy/gin-jwt"
@@ -60,6 +61,7 @@ func JwtMiddleware() (*jwt.GinJWTMiddleware, error) {
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			c.Status(code)
+			c.Redirect(http.StatusTemporaryRedirect, "/auth/login")
 		},
 		// TokenLookup is a string in the form of "<source>:<name>" that is used
 		// to extract token from the request.
