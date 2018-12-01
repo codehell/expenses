@@ -18,11 +18,3 @@ func (et *ExpenseTag) StoreExpenseTag() error {
 	}
 	return nil
 }
-
-func (et *ExpenseTag) DeleteExpenseTag() error {
-	err := db.Delete(et)
-	if err != nil {
-		return err
-	}
-	return nil
-}
