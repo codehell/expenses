@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="mb-5">Expenses</h2>
+    <h2 class="mb-5 text-center">Expenses</h2>
     <div v-if="error">
       <p>{{ error }}</p>
     </div>
@@ -41,30 +41,9 @@
           <button type="submit" class="btn btn-indigo">Submit</button>
         </form>
       </div>
-    </div>
-    <div class="container">
-      <table class="mx-auto" v-if="expenses.length > 0">
-        <tr>
-          <th>expense id</th>
-          <th>description</th>
-          <th>amount</th>
-          <th>tags</th>
-          <th>date</th>
-          <th>delete</th>
-        </tr>
-        <tr v-for="expense in expenses" :key="expense.id">
-          <td>{{ expense.id }}</td>
-          <td>{{ expense.description }}</td>
-          <td>{{ expense.amount }}</td>
-          <td>
-            <li class="list-reset" :key="tag.id" v-for="tag in expense.tags">{{ tag.name }}</li>
-          </td>
-          <td>{{ parseDate(expense.created_at) }}</td>
-          <td>
-            <button @click="deleteExpense(expense)">Del.</button>
-          </td>
-        </tr>
-      </table>
+      <div class="w-full max-w-xs">
+        <ExpensesList :expenses="expenses" @delete-expense="deleteExpense"/>
+      </div>
     </div>
   </div>
 </template>
@@ -73,9 +52,14 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Config from '../../config'
+import ExpensesList from '@/components/dashboard/ExpensesList.vue'
 import moment from 'moment'
 
-@Component
+@Component({
+  components: {
+  ExpensesList
+  }
+  })
 export default class Expenses extends Vue {
     amount: string = ''
     description: string = ''
