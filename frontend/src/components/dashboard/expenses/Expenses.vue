@@ -1,76 +1,81 @@
 <template>
-  <div>
-    <h2 class="mb-5 text-center">Expenses</h2>
-    <div v-if="error">
-      <p>{{ error }}</p>
-    </div>
-    <div v-if="message">
-      <p>{{ message }}</p>
-    </div>
-    <div class="flex flex-wrap justify-evenly container mx-auto">
-      <div class="w-full max-w-xs">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="create">
-          <div class="mb-4">
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
-              type="text" v-model="amount" :placeholder="$t('texts.amount')" required>
-          </div>
-          <div class="mb-4">
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
-              type="text" v-model="description" :placeholder="$t('texts.description')">
-          </div>
-          <div class="mb-4">
-            <select
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
-              v-model="selectedTags" multiple>
-              <option :value="tag.id" v-for="tag in tags" :key="tag.id">{{ tag.name }}</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-indigo">Submit</button>
-          <button type="button" class="btn btn-indigo" @click="refresh()">Refresh</button>
-        </form>
-      </div>
-      <div class="w-full max-w-xs">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="createTag">
-          <div class="mb-4">
-            <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
-              type="text" v-model="tag" :placeholder="$t('texts.new_tag')">
-          </div>
-          <button type="submit" class="btn btn-indigo">Submit</button>
-        </form>
-      </div>
-      <div class="w-full max-w-xs">
+    <div>
+        <h2 class="mb-5 text-center">Expenses</h2>
+        <div v-if="error">
+            <p>{{ error }}</p>
+        </div>
+        <div v-if="message">
+            <p>{{ message }}</p>
+        </div>
+        <expenses-seeker></expenses-seeker>
+        <div class="flex flex-wrap justify-evenly container mx-auto">
+            <div class="w-full max-w-xs">
+                <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="create">
+                    <div class="mb-4">
+                        <input
+                                class="ch-input"
+                                type="text" v-model="amount" :placeholder="$t('texts.amount')" required>
+                    </div>
+                    <div class="mb-4">
+                        <input
+                                class="ch-input"
+                                type="text" v-model="description" :placeholder="$t('texts.description')">
+                    </div>
+                    <div class="mb-4">
+                        <select
+                                class="ch-input"
+                                v-model="selectedTags" multiple>
+                            <option :value="tag.id" v-for="tag in tags" :key="tag.id">{{ tag.name }}</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-indigo">Submit</button>
+                    <button type="button" class="btn btn-indigo" @click="refresh()">Refresh</button>
+                </form>
+            </div>
+            <div class="w-full max-w-xs">
+                <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" @submit.prevent="createTag">
+                    <div class="mb-4">
+                        <input
+                                class="ch-input"
+                                type="text" v-model="tag" :placeholder="$t('texts.new_tag')">
+                    </div>
+                    <button type="submit" class="btn btn-indigo">Submit</button>
+                </form>
+            </div>
+        </div>
+
         <ExpensesList :expenses="expenses" @delete-expense="deleteExpense"/>
-      </div>
+
     </div>
-  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import Config from '../../config'
-import ExpensesList from '@/components/dashboard/ExpensesList.vue'
+import Config from '@/config'
+import ExpensesList from '@/components/dashboard/expenses/ExpensesList.vue'
+import ExpensesSeeker from '@/components/dashboard/expenses/ExpensesSeeker.vue'
 import moment from 'moment'
 
 @Component({
   components: {
-  ExpensesList
+  ExpensesList,
+  ExpensesSeeker
   }
   })
 export default class Expenses extends Vue {
     amount: string = ''
     description: string = ''
     error: string = ''
-    expenses: Array<Object> = []
     headers: Headers = new Headers()
     message: string = ''
     tag: string = ''
     tags: Array<Object> = []
     selectedTags: Array<Number> = []
 
+    get expenses () {
+      return this.$store.state.expenses
+    }
     create () {
       this.error = ''
       this.message = ''
@@ -152,7 +157,7 @@ export default class Expenses extends Vue {
           } else {
             res.json()
               .then(json => {
-                this.expenses = json.expenses
+                this.$store.commit('setExpenses', json.expenses)
                 this.tags = json.tags
               })
           }
@@ -174,16 +179,16 @@ export default class Expenses extends Vue {
 </script>
 
 <i18n>
-  {
-    "en": {
-      "texts": {
-        "description": "Description",
-        "amount": "Amount",
-        "new_tag": "New tag"
-      },
-      "messages": {
-        "expense_deleted": "The expense was deleted successfully"
-      }
+    {
+        "en": {
+            "texts": {
+                "description": "Description",
+                "amount": "Amount",
+                "new_tag": "New tag"
+            },
+            "messages": {
+                "expense_deleted": "The expense was deleted successfully"
+            }
+        }
     }
-  }
 </i18n>

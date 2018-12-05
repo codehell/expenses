@@ -51,7 +51,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import Config from '../../config'
+import Config from '@/config'
 
 @Component
 export default class Register extends Vue {

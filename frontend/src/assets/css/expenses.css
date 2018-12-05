@@ -28,3 +28,15 @@
     justify-content: space-evenly;
 }
 
+.ch-input {
+    @apply shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight overflow-auto;
+}
+
+.ch-input:focus {
+    @apply outline-none shadow-outline;
+}
+
+.ch-input::-webkit-scrollbar {
+    display: none;
+}
+

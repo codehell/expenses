@@ -4,7 +4,7 @@ import Home from './views/Home.vue'
 import Auth from './views/Auth.vue'
 import Register from './components/auth/Register.vue'
 import Login from './components/auth/Login.vue'
-import Expenses from './components/dashboard/Expenses.vue'
+import Expenses from './components/dashboard/expenses/Expenses.vue'
 import Dashboard from './views/Dashboard.vue'
 
 Vue.use(Router)
