@@ -1,8 +1,0 @@
-{
-  "errors": {
-    "undefined": "Sorry, something is going wrong"
-  },
-  "messages": {
-    "created": "The resource was created successfully"
-  }
-}
