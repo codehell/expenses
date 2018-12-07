@@ -1,4 +1,4 @@
-module github.com/codehell/expenses
+module expenses
 
 require (
 	github.com/appleboy/gin-jwt v0.0.0-20181016011525-475d8d97c219

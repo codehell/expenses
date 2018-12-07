@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/codehell/expenses/models"
+	"expenses/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg"
 	"net/http"

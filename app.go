@@ -1,6 +1,6 @@
 package main
 
-import "github.com/codehell/expenses/routes"
+import "expenses/routes"
 
 func main() {
 	r := routes.Router()

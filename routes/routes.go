@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/codehell/expenses/controllers"
-	"github.com/codehell/expenses/middlewares"
+	"expenses/controllers"
+	"expenses/middlewares"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

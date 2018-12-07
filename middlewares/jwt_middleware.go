@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
+	"expenses/models"
 	"github.com/appleboy/gin-jwt"
-	"github.com/codehell/expenses/models"
 	"github.com/gin-gonic/gin"
 )
 
