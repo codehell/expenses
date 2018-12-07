@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	Id       int      `json:"id"`
+	Id       int        `json:"id"`
 	Email    string     `json:"email"`
 	Password string     `json:"password,omitempty"`
 	Expenses []*Expense `json:"expenses"`
@@ -43,7 +43,7 @@ func (u *User) GetUserByEmail() error {
 func (u *User) GetUserExpenses() error {
 	err := db.Model(u).
 		Where("id = ?", u.Id).
-		Column("user.*", "Expenses", "Tags", "Expenses.Tags", "Tags.Expenses").
+		Column("user.*", "Expenses", "Tags", "Expenses.Tags").
 		First()
 	if err != nil {
 		return err
