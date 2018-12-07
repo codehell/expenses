@@ -12,12 +12,12 @@ import (
 
 func Router() *gin.Engine {
 	r := gin.Default()
-	r.LoadHTMLGlob("../frontend/dist/*.html")
-	r.Static("/css", "../frontend/dist/css")
-	r.Static("/js", "../frontend/dist/js")
-	r.Static("/img", "../frontend/dist/img")
+	r.LoadHTMLGlob("./public/*.html")
+	r.Static("/css", "./public/css")
+	r.Static("/js", "./public/js")
+	r.Static("/img", "./public/img")
 	r.NoRoute(func(c *gin.Context) {
-		c.File("../frontend/dist/index.html")
+		c.File("./public/index.html")
 	})
 	corsObject := cors.New(cors.Config{
 		AllowAllOrigins:  true,
