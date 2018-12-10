@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
+	"os"
 	"time"
 )
 
@@ -20,7 +21,15 @@ type dbConfig struct {
 
 func init() {
 	var config dbConfig
-	yamlFile, err := ioutil.ReadFile("./database.yaml")
+	var confFile string
+	env := os.Getenv("GCP_ENVIRONMENT")
+	log.Println("environment: ", env)
+	if env == "develop" {
+		confFile = "./database.yaml"
+	} else {
+		confFile = "./database.pro.yaml"
+	}
+	yamlFile, err := ioutil.ReadFile(confFile)
 	if err != nil {
 		log.Fatal(err)
 	}

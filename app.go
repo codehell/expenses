@@ -1,6 +1,8 @@
 package main
 
-import "expenses/routes"
+import (
+	"expenses/routes"
+)
 
 func main() {
 	r := routes.Router()
