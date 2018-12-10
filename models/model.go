@@ -11,7 +11,10 @@ var db *pg.DB
 func init()  {
 	db = pg.Connect(&pg.Options{
 		User:     "codehell",
-		Database: "awesome",
+		//Database: "awesome",
+		Database: "expenses",
+		Addr: "35.198.163.205:5432",
+		Password: "secret",
 	})
 }
 

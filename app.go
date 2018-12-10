@@ -4,5 +4,5 @@ import "expenses/routes"
 
 func main() {
 	r := routes.Router()
-	_ = r.Run(":3000")
+	_ = r.Run(":8080")
 }
