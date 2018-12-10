@@ -10,27 +10,28 @@ import (
 )
 
 var db *pg.DB
+
 type dbConfig struct {
-	Addr string
-	User string
+	Addr     string
+	User     string
 	Database string
 	Password string
 }
 
-func init()  {
+func init() {
 	var config dbConfig
 	yamlFile, err := ioutil.ReadFile("./database.yaml")
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	db = pg.Connect(&pg.Options{
 		User:     config.User,
 		Database: config.Database,
-		Addr: config.Addr,
+		Addr:     config.Addr,
 		Password: config.Password,
 	})
 }
@@ -40,7 +41,7 @@ type Model struct {
 	UpdatedAt time.Time `json:"updated_at" sql:"default:now()"`
 }
 
-func (m *Model) BeforeInsert (db orm.DB) error {
+func (m *Model) BeforeInsert(db orm.DB) error {
 	if m.CreatedAt.IsZero() {
 		m.CreatedAt = time.Now()
 	}

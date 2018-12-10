@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/go-pg/migrations"
@@ -20,16 +23,31 @@ Usage:
   go run *.go <command> [args]
 `
 
+type dbConfig struct {
+	Addr     string
+	User     string
+	Database string
+	Password string
+}
+
 func main() {
 	flag.Usage = usage
 	flag.Parse()
 
+	var config dbConfig
+	yamlFile, err := ioutil.ReadFile("../database.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = yaml.Unmarshal(yamlFile, &config)
+	if err != nil {
+		log.Fatal(err)
+	}
 	db := pg.Connect(&pg.Options{
-		User:     "codehell",
-		//Database: "awesome",
-		Database: "expenses",
-		Addr: "35.198.163.205:5432",
-		Password: "secret",
+		User:     config.User,
+		Database: config.Database,
+		Addr:     config.Addr,
+		Password: config.Password,
 	})
 
 	oldVersion, newVersion, err := migrations.Run(db, flag.Args()...)
