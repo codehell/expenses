@@ -3,18 +3,35 @@ package models
 import (
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
 	"time"
 )
 
 var db *pg.DB
+type dbConfig struct {
+	Addr string
+	User string
+	Database string
+	Password string
+}
 
 func init()  {
+	var config dbConfig
+	yamlFile, err := ioutil.ReadFile("./database.yaml")
+	if err != nil {
+		log.Println(err)
+	}
+	err = yaml.Unmarshal(yamlFile, &config)
+	if err != nil {
+		log.Println(err)
+	}
 	db = pg.Connect(&pg.Options{
-		User:     "codehell",
-		//Database: "awesome",
-		Database: "expenses",
-		Addr: "35.198.163.205:5432",
-		Password: "secret",
+		User:     config.User,
+		Database: config.Database,
+		Addr: config.Addr,
+		Password: config.Password,
 	})
 }
 

@@ -13,6 +13,8 @@
 .git
 .gitignore
 .idea
+expenses
+database.yaml
 
 # Binaries for programs and plugins
 *.exe

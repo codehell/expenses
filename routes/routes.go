@@ -12,7 +12,6 @@ import (
 
 func Router() *gin.Engine {
 	r := gin.Default()
-	r.LoadHTMLGlob("./public/*.html")
 	r.Static("/css", "./public/css")
 	r.Static("/js", "./public/js")
 	r.Static("/img", "./public/img")
