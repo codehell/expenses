@@ -28,7 +28,7 @@ func main() {
 		User:     "codehell",
 		//Database: "awesome",
 		Database: "expenses",
-		Addr: "35.198.163.205:5432",
+		//Addr: "35.198.163.205:5432",
 		Password: "secret",
 	})
 
