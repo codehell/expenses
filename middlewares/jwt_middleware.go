@@ -40,9 +40,12 @@ func JwtMiddleware() (*jwt.GinJWTMiddleware, error) {
 				return "", jwt.ErrMissingLoginValues
 			}
 			user := models.User{Email: email}
-			user.GetUserByEmail()
+			err := user.GetUserByEmail()
+			if err != nil {
+				return "", err
+			}
 			hashed := []byte(user.Password)
-			err := bcrypt.CompareHashAndPassword(hashed, []byte(password))
+			err = bcrypt.CompareHashAndPassword(hashed, []byte(password))
 			if err != nil {
 				return "", jwt.ErrFailedAuthentication
 			} else {
