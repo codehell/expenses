@@ -13,17 +13,16 @@ func StoreExpense(c *gin.Context) {
 	if !ok {
 		return
 	}
-	err := c.ShouldBindJSON(&expense)
-
+	err := c.BindJSON(&expense)
+	log.Println(expense.Amount)
 	if err != nil {
-		log.Println(err)
-		c.Status(http.StatusInternalServerError)
+		log.Println("Error in BindJSON: ", err)
 		return
 	}
 	expense.UserId = user.Id
 	err = expense.StoreExpense()
 	if err != nil {
-		log.Println(err)
+		log.Println("Error at storing expense", err)
 		c.Status(http.StatusInternalServerError)
 		return
 	}

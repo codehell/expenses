@@ -21,13 +21,13 @@ type dbConfig struct {
 
 func init() {
 	var config dbConfig
-	var confFile string
+	confFile := "./database.yaml"
 	env := os.Getenv("GCP_ENVIRONMENT")
 	log.Println("environment: ", env)
-	if env == "develop" {
-		confFile = "./database.yaml"
-	} else {
+	if env == "production" {
 		confFile = "./database.pro.yaml"
+	} else if env == "testing" {
+		confFile = "./database.tests.yaml"
 	}
 	yamlFile, err := ioutil.ReadFile(confFile)
 	if err != nil {
@@ -48,6 +48,10 @@ func init() {
 type Model struct {
 	CreatedAt time.Time `json:"created_at" sql:"default:now()"`
 	UpdatedAt time.Time `json:"updated_at" sql:"default:now()"`
+}
+
+func GetDb() *pg.DB {
+	return db
 }
 
 func (m *Model) BeforeInsert(db orm.DB) error {

@@ -3,7 +3,7 @@ package models
 type Tag struct {
 	Id     int `json:"id"`
 	UserId int `json:"user_id"`
-	Name   string `json:"name"`
+	Name   string `json:"name" binding:"required,numeric"`
 	Model
 }
 

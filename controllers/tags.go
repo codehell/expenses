@@ -3,6 +3,7 @@ package controllers
 import (
 	"expenses/models"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -12,9 +13,9 @@ func StoreTag(c *gin.Context) {
 	if !ok {
 		return
 	}
-	err := c.ShouldBindJSON(&tag)
+	err := c.BindJSON(&tag)
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		log.Println(err)
 		return
 	}
 	tag.UserId = user.Id

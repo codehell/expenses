@@ -14,6 +14,12 @@ type User struct {
 	Model
 }
 
+type Register struct {
+	Email string `json:"email" binding:"required,email,max=124"`
+	Password string `json:"password" binding:"required,max=124"`
+	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=ConfirmPassword,max=124"`
+}
+
 func (u *User) BeforeInsert(db orm.DB) error {
 	_ = u.Model.BeforeInsert(db)
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
@@ -44,7 +50,7 @@ func (u *User) GetUserExpenses() error {
 	err := db.Model(u).
 		Where("id = ?", u.Id).
 		Column("user.*", "Expenses", "Tags", "Expenses.Tags").
-		First()
+		Select()
 	if err != nil {
 		return err
 	}

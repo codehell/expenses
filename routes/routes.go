@@ -2,6 +2,7 @@ package routes
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"expenses/controllers"
@@ -11,6 +12,9 @@ import (
 )
 
 func Router() *gin.Engine {
+	if os.Getenv("GCP_ENVIRONMENT") == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 	r.Static("/css", "./public/css")
 	r.Static("/js", "./public/js")
@@ -33,6 +37,9 @@ func Router() *gin.Engine {
 	}
 	r.POST("/auth/register", controllers.RegisterUser)
 	r.POST("/auth/login", authMiddleware.LoginHandler)
+	r.GET("/ping", func(context *gin.Context) {
+		context.Status(200)
+	})
 	auth := r.Group("")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{

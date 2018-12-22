@@ -4,20 +4,16 @@ import (
 	"expenses/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg"
+	"log"
 	"net/http"
 )
 
-type register struct {
-	Email string `json:"email" binding:"required,email,max=124"`
-	Password string `json:"password" binding:"required,max=124"`
-	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=ConfirmPassword,max=124"`
-}
-
 func RegisterUser(c *gin.Context) {
-	var reg register
+	var reg models.Register
 	var user models.User
 	err := c.BindJSON(&reg)
 	if err != nil {
+		log.Println(err)
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}

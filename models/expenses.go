@@ -1,15 +1,11 @@
 package models
 
-import (
-	"github.com/shopspring/decimal"
-)
-
 type Expense struct {
-	Id int `json:"id"`
-	UserId int `json:"user_id"`
-	Amount decimal.Decimal `json:"amount"`
-	Description string `json:"description"`
-	Tags []Tag `json:"tags" pg:"many2many:expense_tags"`
+	Id          int    `json:"id"`
+	UserId      int    `json:"user_id"`
+	Amount      string `json:"amount" binding:"required,numeric,max=16"`
+	Description string `json:"description" binding:"required,max=255"`
+	Tags        []Tag  `json:"tags" pg:"many2many:expense_tags"`
 	Model
 }
 

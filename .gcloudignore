@@ -15,6 +15,7 @@
 .idea
 database.yaml
 expenses
+tests
 
 # Binaries for programs and plugins
 *.exe

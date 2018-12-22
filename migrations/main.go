@@ -1,15 +1,11 @@
 package main
 
 import (
+	"expenses/models"
 	"flag"
 	"fmt"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"log"
-	"os"
-
 	"github.com/go-pg/migrations"
-	"github.com/go-pg/pg"
+	"os"
 )
 
 const usageText = `This program runs command on the db. Supported commands are:
@@ -23,32 +19,11 @@ Usage:
   go run *.go <command> [args]
 `
 
-type dbConfig struct {
-	Addr     string
-	User     string
-	Database string
-	Password string
-}
-
 func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	var config dbConfig
-	yamlFile, err := ioutil.ReadFile("../database.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = yaml.Unmarshal(yamlFile, &config)
-	if err != nil {
-		log.Fatal(err)
-	}
-	db := pg.Connect(&pg.Options{
-		User:     config.User,
-		Database: config.Database,
-		Addr:     config.Addr,
-		Password: config.Password,
-	})
+	db := models.GetDb()
 
 	oldVersion, newVersion, err := migrations.Run(db, flag.Args()...)
 	if err != nil {
@@ -68,7 +43,7 @@ func usage() {
 }
 
 func errorf(s string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, s+"\n", args...)
+	_, _ = fmt.Fprintf(os.Stderr, s+"\n", args...)
 }
 
 func exitf(s string, args ...interface{}) {
