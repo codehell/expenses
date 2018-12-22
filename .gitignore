@@ -1,4 +1,3 @@
 .idea
-database.yaml
-database.tests.yaml
 database.pro.yaml
+config.yaml

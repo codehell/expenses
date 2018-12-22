@@ -2,9 +2,11 @@ package main
 
 import (
 	"expenses/routes"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := routes.Router()
-	_ = r.Run(":8080")
+	r := gin.Default()
+	e := routes.Router(r)
+	_ = e.Run(":8080")
 }

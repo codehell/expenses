@@ -1,0 +1,4 @@
+addr: "localhost:5432"
+user:  "codehell"
+database: "expenses"
+password: "secret"

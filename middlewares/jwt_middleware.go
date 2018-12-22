@@ -1,7 +1,10 @@
 package middlewares
 
 import (
+	appConfig "expenses/config"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -13,10 +16,20 @@ import (
 var identityKey = "email"
 
 func JwtMiddleware() (*jwt.GinJWTMiddleware, error) {
+	var config appConfig.Config
+	confFile := "./config.yaml"
+	yamlFile, err := ioutil.ReadFile(confFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = yaml.Unmarshal(yamlFile, &config)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// the jwt middleware
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "test zone",
-		Key:         []byte("secret"),
+		Key:         []byte(config.TokenKey),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
@@ -27,12 +40,6 @@ func JwtMiddleware() (*jwt.GinJWTMiddleware, error) {
 				}
 			}
 			return jwt.MapClaims{}
-		},
-		IdentityHandler: func(c *gin.Context) interface{} {
-			claims := jwt.ExtractClaims(c)
-			return &models.User{
-				Email: claims["email"].(string),
-			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			email, password, ok := c.Request.BasicAuth()

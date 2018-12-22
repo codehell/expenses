@@ -23,7 +23,6 @@ func init() {
 	var config dbConfig
 	confFile := "./database.yaml"
 	env := os.Getenv("GCP_ENVIRONMENT")
-	log.Println("environment: ", env)
 	if env == "production" {
 		confFile = "./database.pro.yaml"
 	} else if env == "testing" {

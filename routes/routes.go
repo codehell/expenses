@@ -11,11 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Router() *gin.Engine {
+func Router(r *gin.Engine) *gin.Engine {
 	if os.Getenv("GCP_ENVIRONMENT") == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	r := gin.Default()
 	r.Static("/css", "./public/css")
 	r.Static("/js", "./public/js")
 	r.Static("/img", "./public/img")

@@ -15,8 +15,8 @@ type User struct {
 }
 
 type Register struct {
-	Email string `json:"email" binding:"required,email,max=124"`
-	Password string `json:"password" binding:"required,max=124"`
+	Email           string `json:"email" binding:"required,email,max=124"`
+	Password        string `json:"password" binding:"required,max=124"`
 	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=ConfirmPassword,max=124"`
 }
 
@@ -55,4 +55,12 @@ func (u *User) GetUserExpenses() error {
 		return err
 	}
 	return nil
+}
+
+func EncryptPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
 }
