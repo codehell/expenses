@@ -4,6 +4,7 @@ require (
 	github.com/appleboy/gin-jwt v0.0.0-20181016011525-475d8d97c219
 	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v0.0.0-20181008113111-488de3ec974f
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-pg/migrations v6.3.0+incompatible

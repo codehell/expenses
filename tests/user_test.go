@@ -4,28 +4,22 @@ import (
 	"bytes"
 	"encoding/json"
 	"expenses/models"
-	"expenses/routes"
-	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg"
+	"github.com/stretchr/testify/assert"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRegisterUser(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	e := gin.Default()
-	r := routes.Router(e)
+	r := getRouter()
 	// Having
 	var register models.Register
 	register.Email = "admin@codehell.net"
 	register.Password = "secret"
 	register.ConfirmPassword = "secret"
 	jsonUser, _ := json.Marshal(&register)
-	req := httptest.NewRequest("POST", "/auth/register", bytes.NewBuffer(jsonUser))
+	req, _ := http.NewRequest("POST", "/auth/register", bytes.NewBuffer(jsonUser))
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
@@ -38,38 +32,28 @@ func TestRegisterUser(t *testing.T) {
 	assert.Equal(t, "The user was registered", w.Body.String())
 	assert.Equal(t, "admin@codehell.net", user.Email)
 
-	ClearUserTable(db)
+	clearUserTable(db)
 }
 
-func TestLoginUser (t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	e := gin.Default()
-	r := routes.Router(e)
+func TestLoginUser(t *testing.T) {
+	r := getRouter()
 
 	user := models.User{
-		Email: "admin@codehell.net",
+		Email:    "admin@codehell.net",
 		Password: "secret",
 	}
 	db := models.GetDb()
-
 	_, err := db.Model(&user).Insert()
 	if err != nil {
 		log.Fatalln("Test fail faking db:", err)
 	}
-	req,  _ := http.NewRequest("POST", "/auth/login", nil)
-	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/auth/login", nil)
 	req.SetBasicAuth("admin@codehell.net", "secret")
+	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
 	// Tests
 	assert.Equal(t, http.StatusOK, w.Code)
 
-	ClearUserTable(db)
-}
-
-func ClearUserTable (db *pg.DB) {
-	_, err := db.Model((*models.User)(nil)).Where("true").Delete()
-	if err != nil {
-		log.Fatalln(err)
-	}
+	clearUserTable(db)
 }
