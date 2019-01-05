@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg"
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"time"
 )
 
@@ -46,4 +48,27 @@ func makeTokenString(SigningAlgorithm string, email string) string {
 	var tokenString string
 	tokenString, _ = token.SignedString(key)
 	return tokenString
+}
+
+func callRouteWithToken(route string, method string, email string) (*httptest.ResponseRecorder, *http.Request) {
+	r := getRouter()
+	token := makeTokenString("", email)
+	req, _ := http.NewRequest(method, route, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	return w, req
+}
+
+func createTestUser(db *pg.DB) models.User{
+	email := "admin@codehell.net"
+	user := models.User{
+		Email:    email,
+		Password: "secret",
+	}
+	_, err := db.Model(&user).Insert()
+	if err != nil {
+		log.Fatalln("Test fail faking user: ", err)
+	}
+	return user
 }

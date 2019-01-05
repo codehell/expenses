@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"expenses/models"
 	"github.com/stretchr/testify/assert"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -36,18 +35,12 @@ func TestRegisterUser(t *testing.T) {
 }
 
 func TestLoginUser(t *testing.T) {
-	r := getRouter()
 
-	user := models.User{
-		Email:    "admin@codehell.net",
-		Password: "secret",
-	}
 	db := models.GetDb()
-	_, err := db.Model(&user).Insert()
+	createTestUser(db)
 	defer clearUserTable(db)
-	if err != nil {
-		log.Fatalln("Test fail faking db:", err)
-	}
+
+	r := getRouter()
 	req, _ := http.NewRequest("POST", "/auth/login", nil)
 	req.SetBasicAuth("admin@codehell.net", "secret")
 	w := httptest.NewRecorder()
