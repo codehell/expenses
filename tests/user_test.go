@@ -44,6 +44,7 @@ func TestLoginUser(t *testing.T) {
 	}
 	db := models.GetDb()
 	_, err := db.Model(&user).Insert()
+	defer clearUserTable(db)
 	if err != nil {
 		log.Fatalln("Test fail faking db:", err)
 	}
@@ -54,6 +55,4 @@ func TestLoginUser(t *testing.T) {
 
 	// Tests
 	assert.Equal(t, http.StatusOK, w.Code)
-
-	clearUserTable(db)
 }

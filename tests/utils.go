@@ -18,6 +18,13 @@ func clearUserTable(db *pg.DB) {
 	}
 }
 
+func clearExpensesTable(db *pg.DB) {
+	_, err := db.Model((*models.Expense)(nil)).Where("true").Delete()
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
 func getRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	e := gin.Default()
